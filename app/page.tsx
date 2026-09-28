@@ -94,6 +94,58 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    let frame = 0;
+    const destination = (id: string) => {
+      const section = document.getElementById(id);
+      if (!section) return null;
+      const header = document.querySelector(".site-header")?.getBoundingClientRect().height ?? 0;
+      return Math.max(0, window.scrollY + section.getBoundingClientRect().top - header);
+    };
+    const jumpToHash = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      const top = destination(id);
+      if (top !== null) window.scrollTo(0, top);
+    };
+    const initialFrame = window.requestAnimationFrame(jumpToHash);
+
+    const navigate = (event: MouseEvent) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const anchor = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href^="#"]') : null;
+      const id = anchor?.getAttribute("href")?.slice(1);
+      if (!id) return;
+      const top = destination(id);
+      if (top === null) return;
+      event.preventDefault();
+      window.cancelAnimationFrame(frame);
+      if (window.location.hash !== `#${id}`) window.history.pushState(null, "", `#${id}`);
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        window.scrollTo(0, top);
+        return;
+      }
+      const start = window.scrollY;
+      const distance = top - start;
+      const started = performance.now();
+      const step = (now: number) => {
+        const progress = Math.min((now - started) / 600, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        window.scrollTo(0, start + distance * eased);
+        if (progress < 1) frame = window.requestAnimationFrame(step);
+      };
+      frame = window.requestAnimationFrame(step);
+    };
+
+    document.addEventListener("click", navigate);
+    window.addEventListener("popstate", jumpToHash);
+    return () => {
+      window.cancelAnimationFrame(initialFrame);
+      window.cancelAnimationFrame(frame);
+      document.removeEventListener("click", navigate);
+      window.removeEventListener("popstate", jumpToHash);
+    };
+  }, []);
+
   const nav = ["About", "Research", "Projects", "Experience", "Contact"];
   return <>
     <header className="site-header">
