@@ -104,6 +104,44 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+
+    const selectors = [
+      ".about-copy > :not(.eyebrow)", ".about-skills > :not(.eyebrow)",
+      ".service-card", ".research-copy > h2", ".research-copy > .section-intro",
+      ".paper", ".research-copy > .text-link", ".projects-heading > *",
+      ".project-card", ".all-work", ".experience-copy > :not(.eyebrow)",
+      ".education-copy > :not(.eyebrow)", ".recognition-inner > h2",
+      ".recognition-grid > *", ".campus-note", ".skills-section h2",
+      ".skills-intro", ".skill-group", ".contact-form-panel > :not(.eyebrow)",
+      ".contact-info > :not(.eyebrow)",
+    ];
+    const targets = document.querySelectorAll<HTMLElement>(selectors.join(","));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.04 });
+
+    targets.forEach((target) => {
+      target.classList.add("scroll-reveal");
+      if (target.getBoundingClientRect().top < window.innerHeight * 0.9) {
+        target.classList.add("is-visible");
+      } else {
+        observer.observe(target);
+      }
+    });
+    document.documentElement.classList.add("reveal-ready");
+
+    return () => {
+      observer.disconnect();
+      document.documentElement.classList.remove("reveal-ready");
+    };
+  }, []);
+
+  useEffect(() => {
     let frame = 0;
     const destination = (id: string) => {
       const section = document.getElementById(id);
@@ -171,13 +209,13 @@ export default function Home() {
 
     <main>
       <section className="hero" id="home">
-        <div className="hero-photo photo-panel"><Image src="/images/shezan-workspace.webp" alt="Bahadur Zamn Shezan seated at a desk" fill priority sizes="(max-width: 760px) 100vw, 50vw" /></div>
+        <div className="hero-photo photo-panel"><Image src="/images/shezan-workspace-hq.webp" alt="Bahadur Zamn Shezan seated at a desk" fill priority unoptimized sizes="(max-width: 760px) 100vw, 50vw" /></div>
         <div className="hero-copy"><div className="hero-content"><p className="eyebrow">WELCOME TO MY PORTFOLIO</p><h1>Hello, I&apos;m <strong>Bahadur Zamn Shezan.</strong></h1><p className="hero-role">AI/ML Engineer <span>/</span> Software Developer <span>/</span> Researcher</p><p className="hero-description">Turning research into intelligent systems that solve real-world problems.</p><a className="outline-button" href="#about">Get started <span>→</span></a></div></div>
       </section>
 
       <section className="about-grid" id="about">
         <div className="about-copy panel-pad"><p className="eyebrow">01 / ABOUT ME</p><h2>Curiosity meets <em>execution.</em></h2><p className="lead">I&apos;m an AI/ML engineer, software developer and computer science student at the <strong>University of Liberal Arts Bangladesh.</strong></p><p>My work moves between research and implementation: from deep learning for medical imaging and lightweight assistive systems to practical retrieval and web applications. I enjoy making complex ideas useful, understandable and accessible.</p><a className="text-link" href={links.linkedin} target="_blank" rel="noreferrer">More about me on LinkedIn <Arrow diagonal /></a></div>
-        <div className="about-photo photo-panel"><Image src="/images/shezan-portrait.webp" alt="Portrait of Bahadur Zamn Shezan" fill sizes="(max-width: 760px) 50vw, 25vw" /></div>
+        <div className="about-photo photo-panel"><Image src="/images/shezan-portrait-hq.webp" alt="Portrait of Bahadur Zamn Shezan" fill unoptimized sizes="(max-width: 760px) 50vw, 25vw" /></div>
         <div className="about-skills panel-pad"><p className="eyebrow">THE FOCUS</p><h2>What I do.</h2><div><span>01</span><strong>AI & Research</strong><small>Machine learning / Medical imaging</small></div><div><span>02</span><strong>Intelligent Systems</strong><small>RAG / Retrieval / TinyML</small></div><div><span>03</span><strong>Engineering</strong><small>Software / Web applications</small></div><a href="#skills">Explore my skills <Arrow diagonal /></a></div>
       </section>
 
@@ -187,7 +225,7 @@ export default function Home() {
 
       <section className="projects-section" id="projects"><div className="wide-container"><div className="projects-heading"><div><p className="eyebrow">03 / SELECTED WORK</p><h2>Ideas made <em>real.</em></h2></div><p>A focused selection of AI systems and software work, from award-winning teamwork to document intelligence.</p></div><div className="project-grid">{projects.map((project) => <article className="project-card" key={project.no}><ProjectVisual kind={project.kind}/><div className="project-body"><span className="project-category">{project.no} / {project.category}</span><h3>{project.title}</h3>{project.award && <span className="award-badge">✳ {project.award}</span>}<p>{project.description}</p><div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a className="text-link" href={project.link} target="_blank" rel="noreferrer">{project.linkText} <Arrow diagonal /></a></div></article>)}</div><a className="all-work" href={links.github} target="_blank" rel="noreferrer">More work on GitHub <Arrow diagonal /></a></div></section>
 
-      <section className="split-section experience-section" id="experience"><div className="experience-photo photo-panel"><Image src="/images/shezan-workspace.webp" alt="Shezan working at a desk" fill sizes="(max-width: 760px) 100vw, 50vw" /></div><div className="experience-copy panel-pad"><p className="eyebrow">04 / MY JOURNEY</p><h2>My <em>experience.</em></h2><p className="section-intro">Research and engineering, from exploration to real-world applications.</p><div className="experience-item"><span className="item-icon" aria-hidden="true">✦</span><div><h3>Researcher <small>May 2025 — Jan 2026</small></h3><a href="https://www.linkedin.com/company/tiny-neurons-research-group/" target="_blank" rel="noreferrer">Tiny Neurons Research Group <Arrow diagonal /></a><p>Contributed to applied AI research in computer vision, medical imaging and lightweight intelligent systems, leading to two co-authored IEEE COMPAS papers.</p></div></div></div></section>
+      <section className="split-section experience-section" id="experience"><div className="experience-photo photo-panel"><Image src="/images/shezan-workspace-hq.webp" alt="Shezan working at a desk" fill unoptimized sizes="(max-width: 760px) 100vw, 50vw" /></div><div className="experience-copy panel-pad"><p className="eyebrow">04 / MY JOURNEY</p><h2>My <em>experience.</em></h2><p className="section-intro">Research and engineering, from exploration to real-world applications.</p><div className="experience-item"><span className="item-icon" aria-hidden="true">✦</span><div><h3>Researcher <small>May 2025 — Jan 2026</small></h3><a href="https://www.linkedin.com/company/tiny-neurons-research-group/" target="_blank" rel="noreferrer">Tiny Neurons Research Group <Arrow diagonal /></a><p>Contributed to applied AI research in computer vision, medical imaging and lightweight intelligent systems, leading to two co-authored IEEE COMPAS papers.</p></div></div></div></section>
 
       <section className="split-section education-section"><div className="education-copy panel-pad"><p className="eyebrow">05 / LEARNING</p><h2>My <em>education.</em></h2><div className="education-item"><span className="item-icon" aria-hidden="true">✦</span><div><span className="date">2022 — EXPECTED MAY 2027</span><h3>B.Sc. in Computer Science & Engineering</h3><p>University of Liberal Arts Bangladesh</p></div></div><div className="education-item"><span className="item-icon" aria-hidden="true">✦</span><div><span className="date">2020</span><h3>Higher Secondary Certificate</h3><p>Dania College · GPA 4.94</p></div></div><div className="education-item"><span className="item-icon" aria-hidden="true">✦</span><div><span className="date">2018</span><h3>Secondary School Certificate</h3><p>Shamsul Hoque Khan School & College · GPA 4.72</p></div></div></div><div className="education-photo photo-panel"><Image src="/images/research-workspace.webp" alt="Workspace with laptop and study materials" fill sizes="(max-width: 760px) 100vw, 50vw" /></div></section>
 
