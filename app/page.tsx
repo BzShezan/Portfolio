@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const links = {
@@ -164,6 +165,7 @@ export default function Home() {
         <div className="container hero-inner"><div className="eyebrow"><span className="status-dot"/> AVAILABLE FOR OPPORTUNITIES <span className="eyebrow-line"/> BASED IN DHAKA, BD</div>
           <p className="hero-kicker">HELLO, I&apos;M</p>
           <h1>Bahadur<br/><em>Zamn</em> Shezan<span className="hero-period">.</span></h1>
+          <div className="hero-portrait"><Image src="/images/shezan-portrait.webp" alt="Portrait of Bahadur Zamn Shezan" fill priority sizes="(max-width: 760px) 75vw, (max-width: 1100px) 40vw, 440px" /></div>
           <div className="hero-bottom"><div><p className="hero-role">AI/ML ENGINEER <span>·</span> SOFTWARE DEVELOPER <span>·</span> RESEARCHER</p><p className="hero-description">Turning research into intelligent systems that solve real-world problems.</p><div className="hero-actions"><a className="btn btn-primary" href="#projects">Explore my work <Arrow diagonal /></a><a className="btn btn-text" href="#research">View research <Arrow /></a></div></div><div className="hero-index"><span>SCROLL TO EXPLORE</span><span className="hero-down">↓</span></div></div>
         </div>
         <div className="hero-rail"><span>RESEARCH <i/> ENGINEERING <i/> IMPACT</span><span>© 2026 — BZS</span></div>
