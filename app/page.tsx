@@ -210,7 +210,7 @@ export default function Home() {
     <main>
       <section className="hero" id="home">
         <div className="hero-photo photo-panel"><Image src="/images/shezan-workspace-hq.webp" alt="Bahadur Zamn Shezan seated at a desk" fill priority unoptimized sizes="(max-width: 760px) 100vw, 50vw" /></div>
-        <div className="hero-copy"><div className="hero-content"><p className="eyebrow">WELCOME TO MY PORTFOLIO</p><h1>Hello, I&apos;m <strong>Bahadur Zamn Shezan.</strong></h1><p className="hero-role">AI/ML Engineer <span>/</span> Software Developer <span>/</span> Researcher</p><p className="hero-description">Turning research into intelligent systems that solve real-world problems.</p><a className="outline-button" href="#about">Get started <span>→</span></a></div></div>
+        <div className="hero-copy"><div className="hero-content"><p className="eyebrow">WELCOME TO MY PORTFOLIO</p><h1>Hello, I&apos;m <strong>Bahadur Zamn Shezan.</strong></h1><p className="hero-role">AI/ML Engineer <span>/</span> Data Scientist <span>/</span> Software Developer <span>/</span> Researcher</p><p className="hero-description">Turning research into intelligent systems that solve real-world problems.</p><a className="outline-button" href="#about">Get started <span>→</span></a></div></div>
       </section>
 
       <section className="about-grid" id="about">
